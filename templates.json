@@ -167,11 +167,21 @@
   },
   "sell_2.png": {
     "label": "Sell Card",
-    "rois": []
+    "rois": [
+        0.2656,
+        0.0407,
+        1.0,
+        0.2907
+      ]
   },
   "sell_3.png": {
     "label": "Sell Card",
-    "rois": []
+    "rois": [
+        0.2656,
+        0.0407,
+        1.0,
+        0.2907
+      ]
   },
   "skip_blind.png": {
     "label": "Skip Blind",
