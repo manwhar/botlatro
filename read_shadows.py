@@ -50,6 +50,47 @@ def get_avg_color_from_region(
     # round colors & return
     return tuple(np.round(average_color).astype(int))
 
+def evaluate_shadow(img, top_left, max_val, w_inp, h_inp) -> bool:
+    """Reads the shadow under a region to determine if a button is clicked."""
+    bottom_right = (top_left[0] + w_inp, top_left[1] + h_inp)
+
+    # shadow_region: y_start, y_end, x_start, x_end
+    sr = (h_inp - 1, h_inp + 2, 20, w_inp - 20)
+
+    avg_bgr = get_avg_color_from_region(
+        img=img,
+        y_start=sr[0],
+        y_end=sr[1],
+        x_start=sr[2],
+        x_end=sr[3],
+        anchor=top_left,
+    )
+
+    abs_y_start = top_left[1] + sr[0]
+    abs_y_end = top_left[1] + sr[1]
+    abs_x_start = top_left[0] + sr[2]
+    abs_x_end = top_left[0] + sr[3]
+
+    shadow_img = img.copy()  # shadow_img shows shadow region
+    cv2.rectangle(img, top_left, bottom_right, color=(0, 0, 255), thickness=10)
+    cv2.rectangle(
+        shadow_img,
+        (abs_x_start, abs_y_start),
+        (abs_x_end, abs_y_end),
+        color=(0, 0, 255),
+        thickness=1,
+    )
+
+    # is button pressed? based on color
+    avg_bgr_np = np.array(avg_bgr)
+    sel_blind_gray_np = np.array(COLORS["sel_blind_gray"])
+    sel_blind_drop_shadow_np = np.array(COLORS["sel_blind_drop_shadow"])
+
+    no_shadow_dist = np.average(abs(avg_bgr_np - sel_blind_gray_np))
+    shadow_dist = np.average(abs(avg_bgr_np - sel_blind_drop_shadow_np))
+
+    clicked = no_shadow_dist < shadow_dist
+    return clicked
 
 def plot(img, template, found_target):
     fig, axs = plt.subplots(2, 3)
@@ -102,8 +143,8 @@ def plot(img, template, found_target):
 
 
 if __name__ == "__main__":
-    img = cv2.imread("test_inputs/balatro_3.png", cv2.IMREAD_UNCHANGED)
-    template = cv2.imread("templates/skip_blind.png", cv2.IMREAD_UNCHANGED)
+    img = cv2.imread("assets/test_inputs/click_run_info.png", cv2.IMREAD_UNCHANGED)
+    template = cv2.imread("assets/templates/run_info.png", cv2.IMREAD_UNCHANGED)
 
     if (template is None) or (img is None):
         raise ValueError(

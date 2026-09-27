@@ -48,16 +48,16 @@ def save_templates(filepath: str, data: dict):
 
 
 def capture_single_roi(img, key_name: str) -> list[float] | None:
-    """Opens a 16:9 window scaled to fit the display to draw an ROI."""
-    h, w = img.shape[:2]
+    """Opens a 1280x720 scaled window to draw an ROI accurately."""
     window_title = f"Select ROI: {key_name} (SPACE/ENTER to confirm, 'c' to cancel)"
 
-    # WINDOW_NORMAL allows fitting to screen; WINDOW_KEEPRATIO locks 16:9 aspect
-    cv2.namedWindow(window_title, cv2.WINDOW_NORMAL | cv2.WINDOW_KEEPRATIO)
-    cv2.resizeWindow(window_title, DISPLAY_WIDTH, DISPLAY_HEIGHT)
+    # Explicitly resize image to display dimensions
+    display_img = cv2.resize(img, (DISPLAY_WIDTH, DISPLAY_HEIGHT))
+    
+    cv2.namedWindow(window_title, cv2.WINDOW_AUTOSIZE)
 
-    # selectROI still records coordinates in original 1920x1080 pixel space
-    rect = cv2.selectROI(window_title, img, fromCenter=False, showCrosshair=True)
+    # selectROI will return coordinates in 1280x720 space
+    rect = cv2.selectROI(window_title, display_img, fromCenter=False, showCrosshair=True)
     cv2.destroyWindow(window_title)
 
     x, y, box_w, box_h = rect
@@ -66,12 +66,12 @@ def capture_single_roi(img, key_name: str) -> list[float] | None:
     if box_w == 0 or box_h == 0:
         return None
 
-    # Calculate normalized [x_min, y_min, x_max, y_max] rounded to 4 decimals
+    # Calculate normalized [x_min, y_min, x_max, y_max] rounded to 4 decimals using DISPLAY dimensions
     return [
-        round(x / w, 4),
-        round(y / h, 4),
-        round((x + box_w) / w, 4),
-        round((y + box_h) / h, 4),
+        round(x / DISPLAY_WIDTH, 4),
+        round(y / DISPLAY_HEIGHT, 4),
+        round((x + box_w) / DISPLAY_WIDTH, 4),
+        round((y + box_h) / DISPLAY_HEIGHT, 4),
     ]
 
 
