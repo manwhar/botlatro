@@ -1,7 +1,10 @@
+import logging
 from dataclasses import dataclass
 
 import cv2
 import numpy as np
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass(frozen=True, slots=True)
@@ -97,12 +100,12 @@ class ImageSize:
         return cls(width=width, height=height)
 
 
-def _to_rgb(image: np.ndarray) -> np.ndarray:
-    """Helper to convert BGR/BGRA/Grayscale to RGB/RGBA for matplotlib."""
-    if image is None:
-        return image
-    if image.ndim == 2:
-        return cv2.cvtColor(image, cv2.COLOR_GRAY2RGB)
-    if image.shape[2] == 4:
-        return cv2.cvtColor(image, cv2.COLOR_BGRA2RGBA)
-    return cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+def crop_image_to_roi(
+    image: np.ndarray,
+    roi: PixelROI,
+    *,
+    copy: bool = False,
+) -> np.ndarray:
+    """Return the image region described by a PixelROI."""
+    cropped = image[roi.y_min : roi.y_max, roi.x_min : roi.x_max]
+    return cropped.copy() if copy else cropped

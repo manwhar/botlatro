@@ -1,6 +1,9 @@
 import cv2
 import numpy as np
+
 from debug_plotter import plot
+from geometry import PixelROI
+from matcher import find_element
 
 F_ELEM_CONF_THRESH = 0.95  # found element confidence threshold
 PRESSED_CONF_THRESH = 0.9  # is the button pressed? confidence threshold
@@ -12,18 +15,6 @@ COLORS = {
 
 # METHOD = cv2.TM_CCOEFF_NORMED
 METHOD = cv2.TM_CCORR_NORMED
-
-
-def find_element(img, bgra_template, method) -> tuple[bool, tuple, float, np.ndarray]:
-    img_bgr = img[:, :, :3]
-    bgr_template = bgra_template[:, :, :3]
-    alpha_mask = bgra_template[:, :, 3]
-    result = cv2.matchTemplate(img_bgr, bgr_template, method, mask=alpha_mask)
-    min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
-    top_left = tuple(max_loc)
-
-    found_target = max_val > F_ELEM_CONF_THRESH
-    return found_target, top_left, max_val, result
 
 
 def get_avg_color_from_region(
@@ -108,7 +99,19 @@ if __name__ == "__main__":
 
     h_inp, w_inp = template.shape[:2]
     original = img.copy()
-    found_target, top_left, max_val, match = find_element(img, template, METHOD)
+    image_height, image_width = img.shape[:2]
+    full_image_roi = PixelROI(1, 1, image_width, image_height)
+    match = find_element(
+        img,
+        template,
+        METHOD,
+        full_image_roi,
+        F_ELEM_CONF_THRESH,
+    )
+    found_target = match.found
+    top_left = match.top_left
+    max_val = match.confidence
+    match_map = match.score_map
     if found_target:
         print(f"Found target at {top_left} with confidence of {max_val}.")
 

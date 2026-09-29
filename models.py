@@ -8,5 +8,5 @@ class EvaluationResult:
     template_name: str
     found: bool
     match: TemplateMatch | None
-    pressed: bool | None
+    clicked: bool | None
     template_filename: str | None = None
