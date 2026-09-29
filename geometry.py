@@ -1,10 +1,11 @@
 from dataclasses import dataclass
 
+import cv2
 import numpy as np
 
 
-@dataclass
-class NormalizedROI(frozen=True, slots=True):
+@dataclass(frozen=True, slots=True)
+class NormalizedROI:
     """Saves ROIs (Regions of Interest) as screen size ratios"""
 
     x_min: float
@@ -12,7 +13,7 @@ class NormalizedROI(frozen=True, slots=True):
     x_max: float
     y_max: float
 
-    def __post_init(self) -> None:
+    def __post_init__(self) -> None:
         bounds = (
             self.x_min,
             self.y_min,
@@ -26,8 +27,8 @@ class NormalizedROI(frozen=True, slots=True):
             raise ValueError("ROI minimums must be less than maximums.")
 
 
-@dataclass
-class PixelROI(frozen=True, slots=True):
+@dataclass(frozen=True, slots=True)
+class PixelROI:
     """Saves ROIs (Regions of Interest) as specific pixel counts"""
 
     x_min: int
@@ -47,6 +48,22 @@ class PixelROI(frozen=True, slots=True):
 
         if self.x_min >= self.x_max or self.y_min >= self.y_max:
             raise ValueError("ROI minimums must be less than maximums.")
+
+    def expanded_bounds(self, factor: float) -> tuple[int, int, int, int]:
+        if factor < 1.0:
+            raise ValueError("ROI expansion factor must be at least 1.0")
+
+        center_x = (self.x_min + self.x_max) / 2
+        center_y = (self.y_min + self.y_max) / 2
+        half_width = self.width * factor / 2
+        half_height = self.height * factor / 2
+
+        return (
+            round(center_x - half_width),
+            round(center_y - half_height),
+            round(center_x + half_width),
+            round(center_y + half_height),
+        )
 
     @property
     def width(self) -> int:
@@ -78,3 +95,14 @@ class ImageSize:
     def from_image(cls, image: np.ndarray) -> "ImageSize":
         height, width = image.shape[:2]
         return cls(width=width, height=height)
+
+
+def _to_rgb(image: np.ndarray) -> np.ndarray:
+    """Helper to convert BGR/BGRA/Grayscale to RGB/RGBA for matplotlib."""
+    if image is None:
+        return image
+    if image.ndim == 2:
+        return cv2.cvtColor(image, cv2.COLOR_GRAY2RGB)
+    if image.shape[2] == 4:
+        return cv2.cvtColor(image, cv2.COLOR_BGRA2RGBA)
+    return cv2.cvtColor(image, cv2.COLOR_BGR2RGB)

@@ -1,6 +1,6 @@
 import cv2
-import matplotlib.pyplot as plt
 import numpy as np
+from debug_plotter import plot
 
 F_ELEM_CONF_THRESH = 0.95  # found element confidence threshold
 PRESSED_CONF_THRESH = 0.9  # is the button pressed? confidence threshold
@@ -50,6 +50,7 @@ def get_avg_color_from_region(
     # round colors & return
     return tuple(np.round(average_color).astype(int))
 
+
 def evaluate_shadow(img, top_left, max_val, w_inp, h_inp) -> bool:
     """Reads the shadow under a region to determine if a button is clicked."""
     bottom_right = (top_left[0] + w_inp, top_left[1] + h_inp)
@@ -90,59 +91,13 @@ def evaluate_shadow(img, top_left, max_val, w_inp, h_inp) -> bool:
     shadow_dist = np.average(abs(avg_bgr_np - sel_blind_drop_shadow_np))
 
     clicked = no_shadow_dist < shadow_dist
-    return clicked
-
-def plot(img, template, found_target):
-    fig, axs = plt.subplots(2, 3)
-    fig.suptitle(f"Clicked={clicked}")
-
-    if found_target:
-        shadow_img = img.copy()  # shadow_img shows shadow region
-        cv2.rectangle(img, top_left, bottom_right, color=(0, 0, 255), thickness=10)
-        cv2.rectangle(
-            shadow_img,
-            (abs_x_start, abs_y_start),
-            (abs_x_end, abs_y_end),
-            color=(0, 0, 255),
-            thickness=1,
-        )
-        shadow_img = cv2.cvtColor(shadow_img, cv2.COLOR_BGR2RGB)
-
-        pad_x = 15
-        pad_y = 15
-
-        crop_y_start = max(0, abs_y_start - pad_y)  # type:ignore
-        crop_y_end = min(shadow_img.shape[0], abs_y_end + pad_y)  # type:ignore
-        crop_x_start = max(0, abs_x_start - pad_x)  # type:ignore
-        crop_x_end = min(shadow_img.shape[1], abs_x_end + pad_x)  # type:ignore
-
-        shadow_crop = shadow_img[crop_y_start:crop_y_end, crop_x_start:crop_x_end]
-        axs[1, 2].imshow(shadow_crop)
-        axs[1, 2].set_title("shadow region")
-
-    original = img.copy()
-
-    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-    original = cv2.cvtColor(original, cv2.COLOR_BGR2RGB)
-    template = cv2.cvtColor(template, cv2.COLOR_BGR2RGB)
-
-    # plt.subplot(121)
-    axs[0, 0].imshow(original)
-    axs[0, 0].set_title("input")
-
-    axs[0, 1].imshow(match)
-    axs[0, 1].set_title("matchTemplate")
-
-    axs[1, 0].imshow(template)
-    axs[1, 0].set_title("template")
-
-    axs[1, 1].imshow(img)
-    axs[1, 1].set_title("button location")
-
-    plt.show()
+    return bool(clicked)
 
 
 if __name__ == "__main__":
+    bottom_right = None
+    abs_x_start, abs_y_start, abs_x_end, abs_y_end = None, None, None, None
+
     img = cv2.imread("assets/test_inputs/click_run_info.png", cv2.IMREAD_UNCHANGED)
     template = cv2.imread("assets/templates/run_info.png", cv2.IMREAD_UNCHANGED)
 
@@ -194,4 +149,16 @@ if __name__ == "__main__":
         print(f"Did not find target; highest confidence of {max_val}")
         clicked = False
 
-    plot(img, template, found_target)
+    plot(
+        img,
+        template,
+        found_target,
+        clicked,
+        top_left,
+        bottom_right,
+        abs_x_start,
+        abs_y_start,
+        abs_x_end,
+        abs_y_end,
+        match,
+    )
