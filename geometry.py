@@ -1,7 +1,6 @@
 import logging
 from dataclasses import dataclass
 
-import cv2
 import numpy as np
 
 logger = logging.getLogger(__name__)

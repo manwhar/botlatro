@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 
 import cv2
-import numpy as np
 from cv2.typing import MatLike
 
 from geometry import ImageSize, PixelROI

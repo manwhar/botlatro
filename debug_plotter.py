@@ -1,11 +1,8 @@
-from typing import TYPE_CHECKING
-
 import cv2
 import matplotlib.pyplot as plt
 import numpy as np
 
-if TYPE_CHECKING:
-    from geometry import PixelROI
+from geometry import PixelROI
 
 
 def _to_rgb(image: np.ndarray) -> np.ndarray:
@@ -219,7 +216,7 @@ def plot(
             manager.frame.Maximize(True)
         elif backend in ["Qt5Agg", "QtAgg", "Qt4Agg"]:
             manager.window.showMaximized()
-    except Exception:
+    except Exception:  # noqa: BLE001, S110
         pass
 
     plt.show()
