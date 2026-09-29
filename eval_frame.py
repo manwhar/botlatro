@@ -2,16 +2,15 @@
 Evaluates the button, if any, being pressed on a given frame
 """
 
-from typing import Any
+import json
 import logging
+from typing import Any
 
 import cv2
-import numpy as np
-import json
-
 import matplotlib.pyplot as plt
+import numpy as np
 
-from read_shadows import COLORS, METHOD, find_element, evaluate_shadow
+from read_shadows import METHOD, evaluate_shadow, find_element
 
 logging.basicConfig(
     level=logging.INFO,
@@ -70,14 +69,18 @@ def plot(
     if found_target and top_left is not None:
         bottom_right = (top_left[0] + w_inp, top_left[1] + h_inp)
         # Red box around element in BGR: (0, 0, 255)
-        cv2.rectangle(annotated_full, top_left, bottom_right, color=(0, 0, 255), thickness=3)
+        cv2.rectangle(
+            annotated_full, top_left, bottom_right, color=(0, 0, 255), thickness=3
+        )
 
     # Zoomed ROI slice
     roi_crop = img[y1:y2, x1:x2].copy()
     if found_target and top_left is not None:
         rel_top_left = (top_left[0] - x1, top_left[1] - y1)
         rel_bottom_right = (rel_top_left[0] + w_inp, rel_top_left[1] + h_inp)
-        cv2.rectangle(roi_crop, rel_top_left, rel_bottom_right, color=(0, 0, 255), thickness=2)
+        cv2.rectangle(
+            roi_crop, rel_top_left, rel_bottom_right, color=(0, 0, 255), thickness=2
+        )
 
     fig, axs = plt.subplots(2, 3, figsize=(15, 8))
 
@@ -120,7 +123,15 @@ def plot(
         axs[1, 1].imshow(_to_rgb(elem_crop))
         axs[1, 1].set_title(f"Target Crop at {top_left}")
     else:
-        axs[1, 1].text(0.5, 0.5, "Target Not Found", ha="center", va="center", fontsize=11, color="gray")
+        axs[1, 1].text(
+            0.5,
+            0.5,
+            "Target Not Found",
+            ha="center",
+            va="center",
+            fontsize=11,
+            color="gray",
+        )
         axs[1, 1].set_title("Target Crop")
 
     # [1, 2] Shadow Region Crop
@@ -131,7 +142,12 @@ def plot(
         abs_x_start = top_left[0] + sr[2]
         abs_x_end = top_left[0] + sr[3]
 
-        if abs_x_end > abs_x_start and abs_y_end > abs_y_start and abs_y_end <= img.shape[0] and abs_x_end <= img.shape[1]:
+        if (
+            abs_x_end > abs_x_start
+            and abs_y_end > abs_y_start
+            and abs_y_end <= img.shape[0]
+            and abs_x_end <= img.shape[1]
+        ):
             shadow_img = img.copy()
             cv2.rectangle(
                 shadow_img,
@@ -149,17 +165,32 @@ def plot(
             axs[1, 2].imshow(_to_rgb(shadow_crop))
             axs[1, 2].set_title(f"Shadow Region (Clicked={clicked})")
         else:
-            axs[1, 2].text(0.5, 0.5, "Shadow bounds invalid", ha="center", va="center", color="gray")
+            axs[1, 2].text(
+                0.5,
+                0.5,
+                "Shadow bounds invalid",
+                ha="center",
+                va="center",
+                color="gray",
+            )
             axs[1, 2].set_title("Shadow Region")
     else:
-        axs[1, 2].text(0.5, 0.5, "Target Not Found", ha="center", va="center", fontsize=11, color="gray")
+        axs[1, 2].text(
+            0.5,
+            0.5,
+            "Target Not Found",
+            ha="center",
+            va="center",
+            fontsize=11,
+            color="gray",
+        )
         axs[1, 2].set_title("Shadow Region")
 
     plt.tight_layout()
     plt.show()
 
 
-with open(TEMPLATE_DATA_PATH, 'r') as f:
+with open(TEMPLATE_DATA_PATH, "r") as f:
     TEMPLATES: dict[str, dict[str, Any]] = json.load(f)
 
 img = cv2.imread(IMAGE_PATH, cv2.IMREAD_UNCHANGED)
@@ -176,7 +207,7 @@ for filename, data in TEMPLATES.items():
     h_inp, w_inp = template.shape[:2]
 
     rois: list[list[float]] = data["rois"]
-    
+
     for idx, roi in enumerate(rois):
         min_x_ratio, min_y_ratio, max_x_ratio, max_y_ratio = roi
         min_x_px = round(min_x_ratio * BASE_WIDTH)
@@ -210,7 +241,9 @@ for filename, data in TEMPLATES.items():
 
         roi_img = img[y1:y2, x1:x2]
 
-        found_target, rel_top_left, max_val, match = find_element(roi_img, template, METHOD)
+        found_target, rel_top_left, max_val, match = find_element(
+            roi_img, template, METHOD
+        )
         top_left = (rel_top_left[0] + x1, rel_top_left[1] + y1)
 
         if found_target:
@@ -220,10 +253,10 @@ for filename, data in TEMPLATES.items():
             )
         else:
             logger.debug(
-                f"Did not find {data['label']} in ROI #{idx+1}; highest confidence of {max_val:.4f}"
+                f"Did not find {data['label']} in ROI #{idx + 1}; highest confidence of {max_val:.4f}"
             )
             clicked = False
-        
+
         if PLOT_FLAG:
             plot(
                 img=img,
@@ -239,5 +272,3 @@ for filename, data in TEMPLATES.items():
 
         if found_target:
             break
-        
-
