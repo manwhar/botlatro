@@ -3,6 +3,7 @@ Evaluates a given template for a given frame.
 """
 
 import logging
+import json
 from itertools import product
 
 import cv2
@@ -19,7 +20,7 @@ logger = logging.getLogger(__name__)
 
 
 def eval(
-    template: Template, img: cv2.mat_wrapper.Mat, config: Config
+    template: Template, img: cv2.mat_wrapper.Mat, config: Config, video_timestamp_str: str = ""
 ) -> EvaluationResult:
     if img is None:
         raise ValueError("Got None for image")
@@ -70,13 +71,14 @@ def eval(
             bottom_left = (top_left[0], top_left[1] + h_inp)
             bottom_right = (top_left[0] + w_inp, top_left[1] + h_inp)
 
-            shift = config.shadow_region_vertical_shift
+            dy = template.shadow_dy
+            dw = template.shadow_dw
             height = config.shadow_region_height
             shadow_region = PixelROI(
                 x_min=bottom_left[0],
-                y_min=bottom_left[1] - shift,
-                x_max=bottom_right[0],
-                y_max=bottom_right[1] + height - shift,
+                y_min=bottom_left[1] + dy,
+                x_max=bottom_right[0] + dw,
+                y_max=bottom_right[1] + height + dy,
             )
 
             shadow_img = crop_image_to_roi(img, shadow_region)
@@ -94,7 +96,8 @@ def eval(
             )
             clicked = False
 
-        if config.debug_plot and match.found:
+        should_plot = config.debug_plot or (config.setup_mode and not template.adjusted)
+        if should_plot and match.found:
             plot_kwargs = {
                 "img": img,
                 "template": image,
@@ -106,11 +109,27 @@ def eval(
                 "clicked": clicked,
                 "label": template.name,
                 "shadow_threshold": config.shadow_threshold,
+                "template_name": template.name,
+                "template_json_path": config.template_json_path,
+                "current_shadow_dy": template.shadow_dy,
+                "current_shadow_dw": template.shadow_dw,
+                "shadow_height": config.shadow_region_height,
+                "video_timestamp_str": video_timestamp_str,
             }
             if match.found:
                 plot_kwargs["shadow_region"] = shadow_region
 
             plot(**plot_kwargs)
+            
+            try:
+                with open(config.template_json_path, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                if template.name in data:
+                    template.adjusted = data[template.name].get("adjusted", template.adjusted)
+                    template.shadow_dy = data[template.name].get("shadow_dy", template.shadow_dy)
+                    template.shadow_dw = data[template.name].get("shadow_dw", template.shadow_dw)
+            except Exception as e:
+                logger.error(f"Failed to reload template data for {template.name}: {e}")
 
         if match.found:
             return EvaluationResult(

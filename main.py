@@ -1,5 +1,5 @@
-import time
 import logging
+import time
 
 import cv2
 
@@ -26,10 +26,17 @@ if __name__ == "__main__":
             config.input_video_path,
             config.resolution,
             config.skip_frames,
-            start_timestamp_seconds=40,
-            end_timestamp_seconds=42,
+            start_timestamp_seconds=config.start_timestamp,
+            end_timestamp_seconds=config.end_timestamp,
         )
     ):
         print(f"\nProcessing frame {idx}...")
+        sec = int(video_frame.timestamp_seconds)
+        hh = sec // 3600
+        mm = (sec % 3600) // 60
+        ss = sec % 60
+        ff = video_frame.index % 60
+        ts_str = f"{video_frame.timestamp_seconds:.2f}s | {hh:02}:{mm:02}:{ss:02}:{ff:02}"
+        
         for template in templates:
-            result = eval(template, video_frame.image, config)
+            result = eval(template, video_frame.image, config, video_timestamp_str=ts_str)

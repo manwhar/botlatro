@@ -14,6 +14,9 @@ class Template:
     norm_rois: list[NormalizedROI]
     px_rois: list[PixelROI]
     images: list[MatLike]
+    shadow_dy: int
+    shadow_dw: int
+    adjusted: bool
 
 
 def template_loader(
@@ -44,6 +47,10 @@ def template_loader(
                 )
             )
 
+        shadow_dy = data.get("shadow_dy", 0)
+        shadow_dw = data.get("shadow_dw", 0)
+        adjusted = data.get("adjusted", False)
+
         images = [
             img
             for f in filenames
@@ -51,6 +58,6 @@ def template_loader(
             is not None
         ]
 
-        templates.append(Template(name, filenames, norm_rois, px_rois, images))
+        templates.append(Template(name, filenames, norm_rois, px_rois, images, shadow_dy, shadow_dw, adjusted))
 
     return templates

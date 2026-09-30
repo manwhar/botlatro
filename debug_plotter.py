@@ -1,6 +1,9 @@
+import json
+import sys
 import cv2
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib.widgets import Slider, Button
 
 from geometry import PixelROI
 
@@ -28,6 +31,12 @@ def plot(
     label: str = "",
     shadow_region: PixelROI | None = None,
     shadow_threshold: float = 1000.0,
+    template_name: str = "",
+    template_json_path: str = "",
+    current_shadow_dy: int = 0,
+    current_shadow_dw: int = 0,
+    shadow_height: int = 10,
+    video_timestamp_str: str = "",
 ) -> None:
     """Plots visual debug data without relying on any global variables.
 
@@ -64,10 +73,12 @@ def plot(
         )
 
     fig, axs = plt.subplots(2, 4, figsize=(20, 8))
-    axs[0, 3].axis("off")  # Leave top-right empty
+    # axs[0, 3].axis("off")  # Handled below
 
     # Overall title
     title_parts = []
+    if video_timestamp_str:
+        title_parts.append(f"[{video_timestamp_str}]")
     if label:
         title_parts.append(f"Label: {label}")
     title_parts.append(f"Found: {found_target}")
@@ -89,6 +100,26 @@ def plot(
     im = axs[0, 2].imshow(match, cmap="viridis")
     axs[0, 2].set_title("matchTemplate Score Map")
     fig.colorbar(im, ax=axs[0, 2], fraction=0.046, pad=0.04)
+
+    # [0, 3] Diagnostic Overlay (Removed for size adjustments)
+    axs[0, 3].axis("off")
+    axs[0, 3].set_title("No Scale Diagnostic Needed")
+
+    def save_and_continue(event):
+        if template_json_path and template_name:
+            try:
+                with open(template_json_path, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                if template_name in data:
+                    data[template_name]["shadow_dy"] = int(shadow_slider.val)
+                    data[template_name]["shadow_dw"] = int(dw_slider.val)
+                    data[template_name]["adjusted"] = True
+                    with open(template_json_path, "w", encoding="utf-8") as f:
+                        json.dump(data, f, indent=2)
+                    print(f"Saved dy={int(shadow_slider.val)} dw={int(dw_slider.val)} and marked adjusted for {template_name}")
+            except Exception as e:
+                print("Failed to save:", e)
+        plt.close(fig)
 
     # [1, 0] Template Image
     axs[1, 0].imshow(_to_rgb(template))
@@ -125,86 +156,123 @@ def plot(
             abs_y_start = shadow_region.y_min
             abs_y_end = shadow_region.y_max
         else:
-            # Fallback to old hardcoded logic if not provided
-            sr = (h_inp - 1, h_inp + 2, 20, w_inp - 20)
-            abs_y_start = top_left[1] + sr[0]
-            abs_y_end = top_left[1] + sr[1]
-            abs_x_start = top_left[0] + sr[2]
-            abs_x_end = top_left[0] + sr[3]
+            # Fallback to dynamic logic using the slider
+            # Will be overridden in the update function anyway, but we do initial setup here
+            pass
 
-        if (
-            abs_x_end > abs_x_start
-            and abs_y_end > abs_y_start
-            and abs_y_end <= img.shape[0]
-            and abs_x_end <= img.shape[1]
-        ):
-            shadow_img = img.copy()
-            cv2.rectangle(
-                shadow_img,
-                (abs_x_start, abs_y_start),
-                (abs_x_end, abs_y_end),
-                color=(0, 0, 255),
-                thickness=1,
-            )
-            pad_x, pad_y = 15, 15
-            sy1 = max(0, abs_y_start - pad_y)
-            sy2 = min(img.shape[0], abs_y_end + pad_y)
-            sx1 = max(0, abs_x_start - pad_x)
-            sx2 = min(img.shape[1], abs_x_end + pad_x)
-            shadow_crop_padded = shadow_img[sy1:sy2, sx1:sx2]
-            axs[1, 2].imshow(_to_rgb(shadow_crop_padded))
-            axs[1, 2].set_title(f"Shadow Region (Clicked={clicked})")
+        # Adjust layout for the sliders on the right
+        plt.subplots_adjust(right=0.88)
+        ax_dw_slider = plt.axes([0.91, 0.2, 0.02, 0.6])
+        ax_dy_slider = plt.axes([0.95, 0.2, 0.02, 0.6])
+        ax_button = plt.axes([0.90, 0.85, 0.08, 0.04])
+        
+        dw_slider = Slider(
+            ax=ax_dw_slider, 
+            label='Shadow dw', 
+            valmin=-100, 
+            valmax=100, 
+            valinit=current_shadow_dw, 
+            valfmt='%d',
+            orientation='vertical'
+        )
+        shadow_slider = Slider(
+            ax=ax_dy_slider, 
+            label='Shadow dy', 
+            valmin=-100, 
+            valmax=100, 
+            valinit=current_shadow_dy, 
+            valfmt='%d',
+            orientation='vertical'
+        )
+        save_button = Button(ax_button, 'Save')
+        save_button.on_clicked(save_and_continue)
 
-            # [1, 3] Plot Edge Profile
-            from shadow_evaluator import detect_horizontal_edges
+        def update_shadow(val=None):
+            dy = int(shadow_slider.val)
+            dw = int(dw_slider.val)
+            # Re-calculate shadow region
+            abs_x_start = top_left[0]
+            abs_x_end = top_left[0] + w_inp + dw
+            abs_y_start = top_left[1] + h_inp + dy
+            abs_y_end = top_left[1] + h_inp + shadow_height + dy
+            
+            axs[1, 2].clear()
+            axs[1, 3].clear()
 
-            actual_shadow_crop = img[abs_y_start:abs_y_end, abs_x_start:abs_x_end]
-            row_sums = detect_horizontal_edges(actual_shadow_crop)
-
-            if len(row_sums) > 0:
-                y_positions = np.arange(len(row_sums))
-                axs[1, 3].plot(row_sums, y_positions, color="blue", linewidth=2)
-                axs[1, 3].invert_yaxis()  # Match image coordinates (y goes down)
-                axs[1, 3].set_title("Shadow Y-Edge Profile (Row Sums)")
-                axs[1, 3].set_xlabel("Gradient Sum")
-                axs[1, 3].set_ylabel("Row Index")
-                axs[1, 3].axvline(
-                    x=shadow_threshold,
-                    color="red",
-                    linestyle="--",
-                    label="Default Threshold",
+            if (
+                abs_x_end > abs_x_start
+                and abs_y_end > abs_y_start
+                and abs_y_end <= img.shape[0]
+                and abs_x_end <= img.shape[1]
+                and abs_y_start >= 0
+                and abs_x_start >= 0
+            ):
+                shadow_img_vis = img.copy()
+                cv2.rectangle(
+                    shadow_img_vis,
+                    (abs_x_start, abs_y_start),
+                    (abs_x_end, abs_y_end),
+                    color=(0, 0, 255),
+                    thickness=1,
                 )
-                axs[1, 3].legend()
+                pad_x, pad_y = 15, 15
+                sy1 = max(0, abs_y_start - pad_y)
+                sy2 = min(img.shape[0], abs_y_end + pad_y)
+                sx1 = max(0, abs_x_start - pad_x)
+                sx2 = min(img.shape[1], abs_x_end + pad_x)
+                shadow_crop_padded = shadow_img_vis[sy1:sy2, sx1:sx2]
+                axs[1, 2].imshow(_to_rgb(shadow_crop_padded))
+                axs[1, 2].set_title(f"Shadow Region (dy={dy}, dw={dw})")
+
+                # Plot Edge Profile
+                from shadow_evaluator import detect_horizontal_edges
+                from shadow_evaluator import analyze_shadow_presence
+                
+                actual_shadow_crop = img[abs_y_start:abs_y_end, abs_x_start:abs_x_end]
+                row_sums = detect_horizontal_edges(actual_shadow_crop)
+                
+                has_shadow = analyze_shadow_presence(
+                    actual_shadow_crop, threshold=shadow_threshold
+                )
+                clicked = not has_shadow
+                axs[1, 2].set_title(f"Shadow Region (Clicked={clicked})")
+
+                if len(row_sums) > 0:
+                    y_positions = np.arange(len(row_sums))
+                    axs[1, 3].plot(row_sums, y_positions, color="blue", linewidth=2)
+                    axs[1, 3].invert_yaxis()
+                    axs[1, 3].set_title("Shadow Y-Edge Profile (Row Sums)")
+                    axs[1, 3].set_xlabel("Gradient Sum")
+                    axs[1, 3].set_ylabel("Row Index")
+                    axs[1, 3].axvline(
+                        x=shadow_threshold,
+                        color="red",
+                        linestyle="--",
+                        label="Default Threshold",
+                    )
+                    axs[1, 3].legend()
+                else:
+                    axs[1, 3].text(0.5, 0.5, "No edge data", ha="center", va="center", color="gray")
+                    axs[1, 3].set_title("Shadow Edge Profile")
             else:
-                axs[1, 3].text(
-                    0.5, 0.5, "No edge data", ha="center", va="center", color="gray"
-                )
-                axs[1, 3].set_title("Shadow Edge Profile")
-        else:
-            for ax in (axs[1, 2], axs[1, 3]):
-                ax.text(
-                    0.5,
-                    0.5,
-                    "Shadow bounds invalid",
-                    ha="center",
-                    va="center",
-                    color="gray",
-                )
-                ax.set_title("Shadow Analysis")
+                for ax in (axs[1, 2], axs[1, 3]):
+                    ax.text(0.5, 0.5, "Shadow bounds invalid", ha="center", va="center", color="gray")
+                    ax.set_title("Shadow Analysis")
+                    
+            fig.canvas.draw_idle()
+
+        dw_slider.on_changed(update_shadow)
+        shadow_slider.on_changed(update_shadow)
+        update_shadow()
     else:
         for ax in (axs[1, 2], axs[1, 3]):
-            ax.text(
-                0.5,
-                0.5,
-                "Target Not Found",
-                ha="center",
-                va="center",
-                fontsize=11,
-                color="gray",
-            )
+            ax.text(0.5, 0.5, "Target Not Found", ha="center", va="center", fontsize=11, color="gray")
             ax.set_title("Shadow Analysis")
 
-    plt.tight_layout()
+    import warnings
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", UserWarning)
+        plt.tight_layout()
 
     # Maximize window to prevent drifting and ensure it's large enough
     try:
