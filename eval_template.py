@@ -18,7 +18,9 @@ from template import Template
 logger = logging.getLogger(__name__)
 
 
-def eval(template: Template, img: cv2.mat_wrapper.Mat, config: Config) -> EvaluationResult:
+def eval(
+    template: Template, img: cv2.mat_wrapper.Mat, config: Config
+) -> EvaluationResult:
     if img is None:
         raise ValueError("Got None for image")
 

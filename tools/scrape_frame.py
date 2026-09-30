@@ -1,4 +1,3 @@
-import argparse
 import subprocess
 import sys
 from pathlib import Path
@@ -8,6 +7,19 @@ try:
 except ImportError:
     print("yt-dlp is not installed. Please install it using: pip install yt-dlp")
     sys.exit(1)
+
+
+# Edit these values before running this script.
+VIDEO_URL = "https://www.youtube.com/watch?v=yX3KKycukKE"
+DOWNLOAD_VIDEO = True
+VIDEO_FILENAME = "downloaded_video.mp4"
+DOWNLOAD_FRAME = False
+FRAME_TIMESTAMP = "00:01:23.500"
+FRAME_FILENAME = "scraped_frame.jpg"
+
+SCRIPT_DIR = Path(__file__).parent
+FRAME_OUTPUT_DIR = SCRIPT_DIR.parent / "assets" / "test_inputs" / "scraped_frames"
+VIDEO_OUTPUT_DIR = SCRIPT_DIR.parent / "assets" / "test_inputs" / "videos"
 
 
 def get_1080p_stream(video_url: str) -> str:
@@ -36,8 +48,26 @@ def get_1080p_stream(video_url: str) -> str:
         raise ValueError("Could not find a valid stream URL in the extracted info.")
 
 
-def grab_frame(video_url: str, timestamp: str, output_path: str):
+def download_video(video_url: str, output_path: Path) -> None:
+    """Download the complete video and merge separate audio/video streams."""
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    ydl_opts = {
+        "format": "bestvideo+bestaudio/best",
+        "merge_output_format": "mp4",
+        "outtmpl": str(output_path),
+    }
+
+    print(f"Downloading video to: {output_path}")
+    try:
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            ydl.download([video_url])
+    except yt_dlp.utils.DownloadError as e:
+        raise ValueError(f"Failed to download video: {e}") from e
+
+
+def grab_frame(video_url: str, timestamp: str, output_path: Path) -> None:
     """Grabs a specific frame using the stream URL and ffmpeg."""
+    output_path.parent.mkdir(parents=True, exist_ok=True)
     print(f"Fetching 1080p stream URL for: {video_url}")
 
     try:
@@ -61,7 +91,7 @@ def grab_frame(video_url: str, timestamp: str, output_path: str):
         "1",  # Only grab 1 frame
         "-q:v",
         "2",  # High quality JPEG
-        output_path,
+        str(output_path),
     ]
 
     try:
@@ -77,26 +107,15 @@ def grab_frame(video_url: str, timestamp: str, output_path: str):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="Grab a 1080p frame from a video using yt-dlp and ffmpeg."
-    )
-    parser.add_argument("url", help="YouTube (or other supported) video URL")
-    parser.add_argument(
-        "timestamp", help="Timestamp to grab (e.g., '00:01:23.500' or '83.5')"
-    )
-    parser.add_argument(
-        "--filename",
-        "-f",
-        help="Output filename (e.g., 'test_frame.jpg')",
-        default="scraped_frame.jpg",
-    )
+    if not VIDEO_URL:
+        raise ValueError("Set VIDEO_URL before running scrape_frame.py")
 
-    args = parser.parse_args()
+    if DOWNLOAD_VIDEO:
+        download_video(VIDEO_URL, VIDEO_OUTPUT_DIR / VIDEO_FILENAME)
 
-    # Resolve project root relative to this script (tools/)
-    script_dir = Path(__file__).parent
-    out_dir = script_dir.parent / "assets" / "test_inputs" / "scraped_frames"
-    out_dir.mkdir(parents=True, exist_ok=True)
-
-    out_path = out_dir / args.filename
-    grab_frame(args.url, args.timestamp, str(out_path.resolve()))
+    if DOWNLOAD_FRAME:
+        grab_frame(
+            VIDEO_URL,
+            FRAME_TIMESTAMP,
+            FRAME_OUTPUT_DIR / FRAME_FILENAME,
+        )

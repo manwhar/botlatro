@@ -10,8 +10,8 @@ import os
 
 import cv2
 
-DEFAULT_CONFIG_PATH = "templates.json"
-DEFAULT_IMAGE_PATH = "assets/mark_rois/select_small.jpg"
+DEFAULT_CONFIG_PATH = "assets/templates.json"
+DEFAULT_IMAGE_PATH = "assets/test_inputs/start_game.jpg"
 EXPECTED_RES = (1920, 1080)  # (width, height)
 DISPLAY_WIDTH = 1280
 DISPLAY_HEIGHT = 720
@@ -29,14 +29,26 @@ def load_templates(filepath: str) -> dict:
     normalized = {}
     for key, val in data.items():
         if isinstance(val, str):
-            normalized[key] = {"label": val, "rois": []}
+            normalized[key] = {
+                "label": val,
+                "filenames": [key] if key.lower().endswith(".png") else [],
+                "rois": [],
+            }
         elif isinstance(val, dict):
             normalized[key] = {
                 "label": val.get("label", key),
+                "filenames": val.get(
+                    "filenames",
+                    [key] if key.lower().endswith(".png") else [],
+                ),
                 "rois": val.get("rois", []),
             }
         else:
-            normalized[key] = {"label": key, "rois": []}
+            normalized[key] = {
+                "label": key,
+                "filenames": [key] if key.lower().endswith(".png") else [],
+                "rois": [],
+            }
 
     return normalized
 
