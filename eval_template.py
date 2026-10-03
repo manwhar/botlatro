@@ -73,12 +73,13 @@ def eval(
 
             dy = template.shadow_dy
             dw = template.shadow_dw
+            dh = template.shadow_dh
             height = config.shadow_region_height
             shadow_region = PixelROI(
                 x_min=bottom_left[0],
                 y_min=bottom_left[1] + dy,
                 x_max=bottom_right[0] + dw,
-                y_max=bottom_right[1] + height + dy,
+                y_max=bottom_right[1] + height + dy + dh,
             )
 
             shadow_img = crop_image_to_roi(img, shadow_region)
@@ -113,6 +114,7 @@ def eval(
                 "template_json_path": config.template_json_path,
                 "current_shadow_dy": template.shadow_dy,
                 "current_shadow_dw": template.shadow_dw,
+                "current_shadow_dh": template.shadow_dh,
                 "shadow_height": config.shadow_region_height,
                 "video_timestamp_str": video_timestamp_str,
             }
@@ -128,6 +130,7 @@ def eval(
                     template.adjusted = data[template.name].get("adjusted", template.adjusted)
                     template.shadow_dy = data[template.name].get("shadow_dy", template.shadow_dy)
                     template.shadow_dw = data[template.name].get("shadow_dw", template.shadow_dw)
+                    template.shadow_dh = data[template.name].get("shadow_dh", template.shadow_dh)
             except Exception as e:
                 logger.error(f"Failed to reload template data for {template.name}: {e}")
 

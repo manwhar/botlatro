@@ -16,6 +16,7 @@ class Template:
     images: list[MatLike]
     shadow_dy: int
     shadow_dw: int
+    shadow_dh: int
     adjusted: bool
 
 
@@ -49,6 +50,7 @@ def template_loader(
 
         shadow_dy = data.get("shadow_dy", 0)
         shadow_dw = data.get("shadow_dw", 0)
+        shadow_dh = data.get("shadow_dh", 0)
         adjusted = data.get("adjusted", False)
 
         images = [
@@ -58,6 +60,6 @@ def template_loader(
             is not None
         ]
 
-        templates.append(Template(name, filenames, norm_rois, px_rois, images, shadow_dy, shadow_dw, adjusted))
+        templates.append(Template(name, filenames, norm_rois, px_rois, images, shadow_dy, shadow_dw, shadow_dh, adjusted))
 
     return templates

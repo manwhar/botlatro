@@ -50,8 +50,8 @@ def detect_horizontal_edges(image: np.ndarray) -> np.ndarray:
     # Take absolute value to get magnitude of gradients
     abs_sobel_y = np.abs(sobel_y)
 
-    # Sum the gradients horizontally across each row
-    row_sums = np.sum(abs_sobel_y, axis=1)
+    # Use median instead of mean to ignore sparse noise spikes and only trigger on consistent lines
+    row_sums = np.median(abs_sobel_y, axis=1)
 
     return row_sums
 

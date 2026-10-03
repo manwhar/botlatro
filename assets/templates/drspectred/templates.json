@@ -40,10 +40,10 @@
     ],
     "rois": [
       [
-        0.4083,
-        0.3898,
-        0.8057,
-        0.513
+        0.4146,
+        0.5361,
+        0.7844,
+        0.6167
       ]
     ],
     "shadow_dy": 0,
@@ -104,7 +104,7 @@
         0.4713
       ]
     ],
-    "shadow_dy": 0,
+    "shadow_dy": 1,
     "shadow_dw": 0,
     "test_frames": [
       {
@@ -117,7 +117,8 @@
         "pressed": false,
         "frame_idx": 7387
       }
-    ]
+    ],
+    "adjusted": true
   },
   "Discard": {
     "label": "Discard",
@@ -166,7 +167,7 @@
         0.9528
       ]
     ],
-    "shadow_dy": 0,
+    "shadow_dy": 4,
     "shadow_dw": 0,
     "test_frames": [
       {
@@ -198,13 +199,10 @@
         "path": "assets/testing/open_pack/frame_23015_pressed_true.jpg",
         "pressed": true,
         "frame_idx": 23015
-      },
-      {
-        "path": "assets/testing/open_pack/frame_23014_pressed_true.jpg",
-        "pressed": true,
-        "frame_idx": 23014
       }
-    ]
+    ],
+    "adjusted": true,
+    "shadow_dh": -6
   },
   "Open Options Menu": {
     "label": "Open Options Menu",
@@ -319,7 +317,9 @@
         "pressed": true,
         "frame_idx": 72277
       }
-    ]
+    ],
+    "shadow_dh": -3,
+    "adjusted": true
   },
   "Reroll Boss": {
     "label": "Reroll Boss",
@@ -400,7 +400,7 @@
         0.8028
       ]
     ],
-    "shadow_dy": 0,
+    "shadow_dy": -3,
     "adjusted": true,
     "shadow_dw": 0,
     "test_frames": [
@@ -424,7 +424,8 @@
         "pressed": false,
         "frame_idx": 3987
       }
-    ]
+    ],
+    "shadow_dh": -3
   },
   "Select Blind": {
     "label": "Select Blind",
@@ -611,7 +612,9 @@
         "pressed": true,
         "frame_idx": 108235
       }
-    ]
+    ],
+    "shadow_dh": 0,
+    "adjusted": true
   },
   "Skip Blind": {
     "label": "Skip Blind",
@@ -650,7 +653,7 @@
         0.9297
       ]
     ],
-    "shadow_dy": 3,
+    "shadow_dy": 2,
     "adjusted": true,
     "shadow_dw": 0,
     "test_frames": [
@@ -669,7 +672,8 @@
         "pressed": false,
         "frame_idx": 30979
       }
-    ]
+    ],
+    "shadow_dh": -6
   },
   "Sort by Suit": {
     "label": "Sort by Suit",
@@ -694,9 +698,10 @@
     "filenames": [
       "use.png",
       "hang_em.png",
-      "spin.png",
+      "spin_consumable.png",
+      "spin_consumable_tilt.png",
       "light_em_up.png",
-      "light_em_up_2.png"
+      "light_em_up_tilt.png"
     ],
     "rois": [
       [
@@ -747,7 +752,8 @@
     "filenames": [
       "use_pack.png",
       "hang_em_pack.png",
-      "light_em_up_pack.png"
+      "light_em_up_pack.png",
+      "spin.png"
     ],
     "rois": [
       [

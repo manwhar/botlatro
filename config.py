@@ -14,10 +14,10 @@ class Config:
         self.resolution = ImageSize(width=1920, height=1080)
         self.matching_method = cv2.TM_CCORR_NORMED
 
-        self.elem_conf_thresh = 0.95  # found element? confidence threshold
+        self.elem_conf_thresh = 0.946  # found element? confidence threshold
         self.expand_roi_factor = 1.3
         self.shadow_region_height = 10  # pixels
-        self.shadow_threshold = 6000
+        self.shadow_threshold = 52.0
         self.skip_frames = 20  # skip n frames then use 1
 
         self.start_timestamp = 80

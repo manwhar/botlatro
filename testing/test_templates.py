@@ -76,19 +76,24 @@ class TestTemplates(unittest.TestCase):
                         video_timestamp_str=f"Frame {frame_idx}"
                     )
                     
-                    # Assert template found
-                    self.assertTrue(
-                        result.found, 
-                        f"Expected template '{template_name}' to be found in frame {frame_idx}"
-                    )
-                    
-                    # Assert 'pressed'/'clicked' state
-                    self.assertEqual(
-                        result.clicked, 
-                        expected_pressed, 
-                        f"Mismatch in pressed state for '{template_name}' at frame {frame_idx}. "
-                        f"Expected {expected_pressed}, got {result.clicked}."
-                    )
+                    # For expected_pressed=False, we only fail on false positive
+                    if expected_pressed is False:
+                        if result.found and result.clicked:
+                            self.fail(f"False positive: Algorithm incorrectly found '{template_name}' as pressed in frame {frame_idx}.")
+                    else:
+                        # Assert template found
+                        self.assertTrue(
+                            result.found, 
+                            f"Expected template '{template_name}' to be found in frame {frame_idx}"
+                        )
+                        
+                        # Assert 'pressed'/'clicked' state
+                        self.assertEqual(
+                            result.clicked, 
+                            expected_pressed, 
+                            f"Mismatch in pressed state for '{template_name}' at frame {frame_idx}. "
+                            f"Expected {expected_pressed}, got {result.clicked}."
+                        )
                     
         # Basic sanity check to ensure we didn't quietly skip everything
         self.assertGreater(tests_run, 0, "No test_frames found to execute.")

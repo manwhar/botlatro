@@ -3,7 +3,7 @@
 Examples:
     python tools/crop_transparent_borders.py
     python tools/crop_transparent_borders.py --in-place
-    python tools/crop_transparent_borders.py --input-dir assets/templates --output-dir assets/templates_cropped
+    python tools/crop_transparent_borders.py --input-dir assets/templates --output-dir assets/templates
 """
 
 import argparse

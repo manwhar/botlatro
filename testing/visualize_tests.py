@@ -17,7 +17,10 @@ from shadow_evaluator import analyze_shadow_presence
 from geometry import PixelROI, crop_image_to_roi
 from debug_plotter import plot
 
-def run_visual_tests():
+# Set to True to only visualize/show failed tests. Set to False to view all tests.
+SHOW_ONLY_FAILURES = True
+
+def run_visual_tests(show_only_failures: bool = SHOW_ONLY_FAILURES):
     config = Config()
     templates = template_loader(config.template_json_path, config.template_img_dir, config.resolution)
     template_dict = {t.name: t for t in templates}
@@ -105,6 +108,7 @@ def run_visual_tests():
             h_inp, w_inp = best_image.shape[:2]
             dy = template.shadow_dy
             dw = template.shadow_dw
+            dh = template.shadow_dh
             height = config.shadow_region_height
             bottom_left = (best_top_left[0], best_top_left[1] + h_inp)
             bottom_right = (best_top_left[0] + w_inp, best_top_left[1] + h_inp)
@@ -113,20 +117,32 @@ def run_visual_tests():
                 x_min=bottom_left[0],
                 y_min=bottom_left[1] + dy,
                 x_max=bottom_right[0] + dw,
-                y_max=bottom_right[1] + height + dy,
+                y_max=bottom_right[1] + height + dy + dh,
             )
             shadow_img = crop_image_to_roi(img, shadow_region)
             has_shadow = analyze_shadow_presence(shadow_img, threshold=config.shadow_threshold)
             clicked = not has_shadow
 
             # Build detailed label
-            if not found_target:
-                status_text = f"FAIL (Not Found. {best_confidence:.4f} < {config.elem_conf_thresh})"
-            elif expected_pressed is not None and clicked != expected_pressed:
-                status_text = f"FAIL (Shadow. Actual: {clicked}, Expected: {expected_pressed})"
+            if expected_pressed is False:
+                if found_target and clicked:
+                    status_text = "FAIL (False Positive. Expected Unpressed, but found as pressed)"
+                elif not found_target:
+                    status_text = "PASS (Not Found; fine for expected=False)"
+                else:
+                    status_text = "PASS (Found; correctly identified as Unpressed)"
             else:
-                status_text = f"PASS"
+                if not found_target:
+                    status_text = f"FAIL (Not Found. {best_confidence:.4f} < {config.elem_conf_thresh})"
+                elif expected_pressed is not None and clicked != expected_pressed:
+                    status_text = f"FAIL (Shadow. Actual: {clicked}, Expected: {expected_pressed})"
+                else:
+                    status_text = f"PASS"
             
+            is_failure = status_text.startswith("FAIL")
+            if show_only_failures and not is_failure:
+                continue
+
             label_text = f"Expected Pressed: {expected_pressed} | {status_text}"
             print(f"[{template_name}] Frame {frame_idx}: {status_text}", flush=True)
             
@@ -148,6 +164,7 @@ def run_visual_tests():
                     template_json_path=config.template_json_path,
                     current_shadow_dy=template.shadow_dy,
                     current_shadow_dw=template.shadow_dw,
+                    current_shadow_dh=template.shadow_dh,
                     shadow_height=config.shadow_region_height,
                     video_timestamp_str=f"Frame: {frame_idx}",
                 )

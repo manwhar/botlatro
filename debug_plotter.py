@@ -35,6 +35,7 @@ def plot(
     template_json_path: str = "",
     current_shadow_dy: int = 0,
     current_shadow_dw: int = 0,
+    current_shadow_dh: int = 0,
     shadow_height: int = 10,
     video_timestamp_str: str = "",
 ) -> None:
@@ -113,10 +114,11 @@ def plot(
                 if template_name in data:
                     data[template_name]["shadow_dy"] = int(shadow_slider.val)
                     data[template_name]["shadow_dw"] = int(dw_slider.val)
+                    data[template_name]["shadow_dh"] = int(dh_slider.val)
                     data[template_name]["adjusted"] = True
                     with open(template_json_path, "w", encoding="utf-8") as f:
                         json.dump(data, f, indent=2)
-                    print(f"Saved dy={int(shadow_slider.val)} dw={int(dw_slider.val)} and marked adjusted for {template_name}")
+                    print(f"Saved dy={int(shadow_slider.val)} dw={int(dw_slider.val)} dh={int(dh_slider.val)} and marked adjusted for {template_name}")
             except Exception as e:
                 print("Failed to save:", e)
         plt.close(fig)
@@ -161,11 +163,21 @@ def plot(
             pass
 
         # Adjust layout for the sliders on the right
-        plt.subplots_adjust(right=0.88)
-        ax_dw_slider = plt.axes([0.91, 0.2, 0.02, 0.6])
-        ax_dy_slider = plt.axes([0.95, 0.2, 0.02, 0.6])
+        plt.subplots_adjust(right=0.86)
+        ax_dh_slider = plt.axes([0.88, 0.2, 0.02, 0.6])
+        ax_dw_slider = plt.axes([0.92, 0.2, 0.02, 0.6])
+        ax_dy_slider = plt.axes([0.96, 0.2, 0.02, 0.6])
         ax_button = plt.axes([0.90, 0.85, 0.08, 0.04])
         
+        dh_slider = Slider(
+            ax=ax_dh_slider, 
+            label='Shadow dh', 
+            valmin=-50, 
+            valmax=50, 
+            valinit=current_shadow_dh, 
+            valfmt='%d',
+            orientation='vertical'
+        )
         dw_slider = Slider(
             ax=ax_dw_slider, 
             label='Shadow dw', 
@@ -190,11 +202,12 @@ def plot(
         def update_shadow(val=None):
             dy = int(shadow_slider.val)
             dw = int(dw_slider.val)
+            dh = int(dh_slider.val)
             # Re-calculate shadow region
             abs_x_start = top_left[0]
             abs_x_end = top_left[0] + w_inp + dw
             abs_y_start = top_left[1] + h_inp + dy
-            abs_y_end = top_left[1] + h_inp + shadow_height + dy
+            abs_y_end = top_left[1] + h_inp + shadow_height + dy + dh
             
             axs[1, 2].clear()
             axs[1, 3].clear()
@@ -261,6 +274,7 @@ def plot(
                     
             fig.canvas.draw_idle()
 
+        dh_slider.on_changed(update_shadow)
         dw_slider.on_changed(update_shadow)
         shadow_slider.on_changed(update_shadow)
         update_shadow()
