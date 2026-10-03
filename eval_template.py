@@ -19,6 +19,15 @@ from template import Template
 logger = logging.getLogger(__name__)
 
 
+def format_timestamp(timestamp_seconds: float, frame_index: int) -> str:
+    sec = int(timestamp_seconds)
+    hh = sec // 3600
+    mm = (sec % 3600) // 60
+    ss = sec % 60
+    ff = frame_index % 60
+    return f"{timestamp_seconds:.2f}s | {hh:02}:{mm:02}:{ss:02}:{ff:02}"
+
+
 def eval(
     template: Template, img: cv2.mat_wrapper.Mat, config: Config, video_timestamp_str: str = ""
 ) -> EvaluationResult:

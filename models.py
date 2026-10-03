@@ -10,3 +10,5 @@ class EvaluationResult:
     match: TemplateMatch | None
     clicked: bool | None
     template_filename: str | None = None
+    plot_kwargs: dict | None = None
+
