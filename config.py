@@ -8,9 +8,9 @@ from geometry import ImageSize
 class Config:
     def __init__(self):
         self.template_json_path = "assets/templates/drspectred/templates.json"
-        self.template_img_dir = "assets/templates_cropped/drspectred"
-        self.input_img_path = "assets/test_inputs/scraped_frames/test_frame_1.jpg"
-        self.input_video_path = "assets/test_inputs/videos/bu_full.mp4"
+        self.template_img_dir = "assets/templates/drspectred"
+        self.input_img_path = "assets/sample_inputs/scraped_frames/test_frame_1.jpg"
+        self.input_video_path = "assets/sample_inputs/videos/bu_full.mp4"
         self.resolution = ImageSize(width=1920, height=1080)
         self.matching_method = cv2.TM_CCORR_NORMED
 

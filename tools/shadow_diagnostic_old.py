@@ -89,7 +89,7 @@ if __name__ == "__main__":
     bottom_right = None
     abs_x_start, abs_y_start, abs_x_end, abs_y_end = None, None, None, None
 
-    img = cv2.imread("assets/test_inputs/click_run_info.png", cv2.IMREAD_UNCHANGED)
+    img = cv2.imread("assets/sample_inputs/click_run_info.png", cv2.IMREAD_UNCHANGED)
     template = cv2.imread("assets/templates/run_info.png", cv2.IMREAD_UNCHANGED)
 
     if (template is None) or (img is None):

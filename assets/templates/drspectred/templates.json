@@ -12,8 +12,26 @@
         0.4917
       ]
     ],
-    "shadow_dy": 0,
-    "shadow_dw": 0
+    "shadow_dy": 2,
+    "shadow_dw": -13,
+    "test_frames": [
+      {
+        "path": "assets/testing/buy_and_use/frame_93591_pressed_false.jpg",
+        "pressed": false,
+        "frame_idx": 93591
+      },
+      {
+        "path": "assets/testing/buy_and_use/frame_93577_pressed_false.jpg",
+        "pressed": false,
+        "frame_idx": 93577
+      },
+      {
+        "path": "assets/testing/buy_and_use/frame_93612_pressed_true.jpg",
+        "pressed": true,
+        "frame_idx": 93612
+      }
+    ],
+    "adjusted": true
   },
   "Buy Card": {
     "label": "Buy Card",
@@ -29,12 +47,54 @@
       ]
     ],
     "shadow_dy": 0,
-    "shadow_dw": 0
+    "shadow_dw": 0,
+    "test_frames": [
+      {
+        "path": "assets/testing/buy_card/frame_7872_pressed_false.jpg",
+        "pressed": false,
+        "frame_idx": 7872
+      },
+      {
+        "path": "assets/testing/buy_card/frame_7796_pressed_false.jpg",
+        "pressed": false,
+        "frame_idx": 7796
+      },
+      {
+        "path": "assets/testing/buy_card/frame_7916_pressed_true.jpg",
+        "pressed": true,
+        "frame_idx": 7916
+      },
+      {
+        "path": "assets/testing/buy_card/frame_17357_pressed_false.jpg",
+        "pressed": false,
+        "frame_idx": 17357
+      },
+      {
+        "path": "assets/testing/buy_card/frame_17773_pressed_true.jpg",
+        "pressed": true,
+        "frame_idx": 17773
+      },
+      {
+        "path": "assets/testing/buy_card/frame_17670_pressed_false.jpg",
+        "pressed": false,
+        "frame_idx": 17670
+      },
+      {
+        "path": "assets/testing/buy_card/frame_37674_pressed_false.jpg",
+        "pressed": false,
+        "frame_idx": 37674
+      },
+      {
+        "path": "assets/testing/buy_card/frame_37737_pressed_true.jpg",
+        "pressed": true,
+        "frame_idx": 37737
+      }
+    ]
   },
   "Cash Out": {
     "label": "Cash Out",
     "filenames": [
-      "cash_out_full.png"
+      "cash_out.png"
     ],
     "rois": [
       [
@@ -45,7 +105,19 @@
       ]
     ],
     "shadow_dy": 0,
-    "shadow_dw": 0
+    "shadow_dw": 0,
+    "test_frames": [
+      {
+        "path": "assets/testing/cash_out/frame_7394_pressed_true.jpg",
+        "pressed": true,
+        "frame_idx": 7394
+      },
+      {
+        "path": "assets/testing/cash_out/frame_7387_pressed_false.jpg",
+        "pressed": false,
+        "frame_idx": 7387
+      }
+    ]
   },
   "Discard": {
     "label": "Discard",
@@ -62,7 +134,24 @@
     ],
     "shadow_dy": -10,
     "adjusted": true,
-    "shadow_dw": 0
+    "shadow_dw": 0,
+    "test_frames": [
+      {
+        "path": "assets/testing/discard/frame_2177_pressed_false.jpg",
+        "pressed": false,
+        "frame_idx": 2177
+      },
+      {
+        "path": "assets/testing/discard/frame_1985_pressed_false.jpg",
+        "pressed": false,
+        "frame_idx": 1985
+      },
+      {
+        "path": "assets/testing/discard/frame_2235_pressed_true.jpg",
+        "pressed": true,
+        "frame_idx": 2235
+      }
+    ]
   },
   "Open Pack": {
     "label": "Open Pack",
@@ -78,7 +167,44 @@
       ]
     ],
     "shadow_dy": 0,
-    "shadow_dw": 0
+    "shadow_dw": 0,
+    "test_frames": [
+      {
+        "path": "assets/testing/open_pack/frame_3556_pressed_false.jpg",
+        "pressed": false,
+        "frame_idx": 3556
+      },
+      {
+        "path": "assets/testing/open_pack/frame_3550_pressed_false.jpg",
+        "pressed": false,
+        "frame_idx": 3550
+      },
+      {
+        "path": "assets/testing/open_pack/frame_3548_pressed_false.jpg",
+        "pressed": false,
+        "frame_idx": 3548
+      },
+      {
+        "path": "assets/testing/open_pack/frame_3571_pressed_true.jpg",
+        "pressed": true,
+        "frame_idx": 3571
+      },
+      {
+        "path": "assets/testing/open_pack/frame_22939_pressed_false.jpg",
+        "pressed": false,
+        "frame_idx": 22939
+      },
+      {
+        "path": "assets/testing/open_pack/frame_23015_pressed_true.jpg",
+        "pressed": true,
+        "frame_idx": 23015
+      },
+      {
+        "path": "assets/testing/open_pack/frame_23014_pressed_true.jpg",
+        "pressed": true,
+        "frame_idx": 23014
+      }
+    ]
   },
   "Open Options Menu": {
     "label": "Open Options Menu",
@@ -95,7 +221,8 @@
     ],
     "shadow_dy": 0,
     "adjusted": true,
-    "shadow_dw": 0
+    "shadow_dw": 0,
+    "test_frames": []
   },
   "Play Hand": {
     "label": "Play Hand",
@@ -112,7 +239,44 @@
     ],
     "shadow_dy": -6,
     "adjusted": true,
-    "shadow_dw": 0
+    "shadow_dw": 0,
+    "test_frames": [
+      {
+        "path": "assets/testing/play_hand/frame_1993_pressed_false.jpg",
+        "pressed": false,
+        "frame_idx": 1993
+      },
+      {
+        "path": "assets/testing/play_hand/frame_2466_pressed_false.jpg",
+        "pressed": false,
+        "frame_idx": 2466
+      },
+      {
+        "path": "assets/testing/play_hand/frame_2479_pressed_true.jpg",
+        "pressed": true,
+        "frame_idx": 2479
+      },
+      {
+        "path": "assets/testing/play_hand/frame_2839_pressed_false.jpg",
+        "pressed": false,
+        "frame_idx": 2839
+      },
+      {
+        "path": "assets/testing/play_hand/frame_19988_pressed_false.jpg",
+        "pressed": false,
+        "frame_idx": 19988
+      },
+      {
+        "path": "assets/testing/play_hand/frame_20334_pressed_false.jpg",
+        "pressed": false,
+        "frame_idx": 20334
+      },
+      {
+        "path": "assets/testing/play_hand/frame_20351_pressed_true.jpg",
+        "pressed": true,
+        "frame_idx": 20351
+      }
+    ]
   },
   "Redeem Voucher": {
     "label": "Redeem Voucher",
@@ -128,7 +292,34 @@
       ]
     ],
     "shadow_dy": 0,
-    "shadow_dw": 0
+    "shadow_dw": 0,
+    "test_frames": [
+      {
+        "path": "assets/testing/redeem_voucher/frame_72272_pressed_false.jpg",
+        "pressed": false,
+        "frame_idx": 72272
+      },
+      {
+        "path": "assets/testing/redeem_voucher/frame_72267_pressed_false.jpg",
+        "pressed": false,
+        "frame_idx": 72267
+      },
+      {
+        "path": "assets/testing/redeem_voucher/frame_72269_pressed_false.jpg",
+        "pressed": false,
+        "frame_idx": 72269
+      },
+      {
+        "path": "assets/testing/redeem_voucher/frame_72273_pressed_false.jpg",
+        "pressed": false,
+        "frame_idx": 72273
+      },
+      {
+        "path": "assets/testing/redeem_voucher/frame_72277_pressed_true.jpg",
+        "pressed": true,
+        "frame_idx": 72277
+      }
+    ]
   },
   "Reroll Boss": {
     "label": "Reroll Boss",
@@ -144,7 +335,8 @@
       ]
     ],
     "shadow_dy": 0,
-    "shadow_dw": 0
+    "shadow_dw": 0,
+    "test_frames": []
   },
   "Reroll Shop": {
     "label": "Reroll Shop",
@@ -161,7 +353,39 @@
     ],
     "shadow_dy": 0,
     "adjusted": true,
-    "shadow_dw": 0
+    "shadow_dw": 0,
+    "test_frames": [
+      {
+        "path": "assets/testing/reroll_shop/frame_107709_pressed_false.jpg",
+        "pressed": false,
+        "frame_idx": 107709
+      },
+      {
+        "path": "assets/testing/reroll_shop/frame_107790_pressed_true.jpg",
+        "pressed": true,
+        "frame_idx": 107790
+      },
+      {
+        "path": "assets/testing/reroll_shop/frame_107786_pressed_true.jpg",
+        "pressed": true,
+        "frame_idx": 107786
+      },
+      {
+        "path": "assets/testing/reroll_shop/frame_107590_pressed_false.jpg",
+        "pressed": false,
+        "frame_idx": 107590
+      },
+      {
+        "path": "assets/testing/reroll_shop/frame_36977_pressed_false.jpg",
+        "pressed": false,
+        "frame_idx": 36977
+      },
+      {
+        "path": "assets/testing/reroll_shop/frame_33550_pressed_false.jpg",
+        "pressed": false,
+        "frame_idx": 33550
+      }
+    ]
   },
   "Open Run Info Menu": {
     "label": "Open Run Info Menu",
@@ -178,7 +402,29 @@
     ],
     "shadow_dy": 0,
     "adjusted": true,
-    "shadow_dw": 0
+    "shadow_dw": 0,
+    "test_frames": [
+      {
+        "path": "assets/testing/open_run_info_menu/frame_3786_pressed_false.jpg",
+        "pressed": false,
+        "frame_idx": 3786
+      },
+      {
+        "path": "assets/testing/open_run_info_menu/frame_3816_pressed_false.jpg",
+        "pressed": false,
+        "frame_idx": 3816
+      },
+      {
+        "path": "assets/testing/open_run_info_menu/frame_3854_pressed_true.jpg",
+        "pressed": true,
+        "frame_idx": 3854
+      },
+      {
+        "path": "assets/testing/open_run_info_menu/frame_3987_pressed_false.jpg",
+        "pressed": false,
+        "frame_idx": 3987
+      }
+    ]
   },
   "Select Blind": {
     "label": "Select Blind",
@@ -207,7 +453,59 @@
     ],
     "shadow_dy": 0,
     "adjusted": true,
-    "shadow_dw": 0
+    "shadow_dw": 0,
+    "test_frames": [
+      {
+        "path": "assets/testing/select_blind/frame_1128_pressed_false.jpg",
+        "pressed": false,
+        "frame_idx": 1128
+      },
+      {
+        "path": "assets/testing/select_blind/frame_1098_pressed_false.jpg",
+        "pressed": false,
+        "frame_idx": 1098
+      },
+      {
+        "path": "assets/testing/select_blind/frame_1153_pressed_true.jpg",
+        "pressed": true,
+        "frame_idx": 1153
+      },
+      {
+        "path": "assets/testing/select_blind/frame_4254_pressed_false.jpg",
+        "pressed": false,
+        "frame_idx": 4254
+      },
+      {
+        "path": "assets/testing/select_blind/frame_4234_pressed_false.jpg",
+        "pressed": false,
+        "frame_idx": 4234
+      },
+      {
+        "path": "assets/testing/select_blind/frame_4263_pressed_true.jpg",
+        "pressed": true,
+        "frame_idx": 4263
+      },
+      {
+        "path": "assets/testing/select_blind/frame_5673_pressed_false.jpg",
+        "pressed": false,
+        "frame_idx": 5673
+      },
+      {
+        "path": "assets/testing/select_blind/frame_5681_pressed_true.jpg",
+        "pressed": true,
+        "frame_idx": 5681
+      },
+      {
+        "path": "assets/testing/select_blind/frame_5660_pressed_false.jpg",
+        "pressed": false,
+        "frame_idx": 5660
+      },
+      {
+        "path": "assets/testing/select_blind/frame_5667_pressed_false.jpg",
+        "pressed": false,
+        "frame_idx": 5667
+      }
+    ]
   },
   "Select Card": {
     "label": "Select Card",
@@ -223,7 +521,39 @@
       ]
     ],
     "shadow_dy": 0,
-    "shadow_dw": 0
+    "shadow_dw": 0,
+    "test_frames": [
+      {
+        "path": "assets/testing/select_card/frame_25764_pressed_false.jpg",
+        "pressed": false,
+        "frame_idx": 25764
+      },
+      {
+        "path": "assets/testing/select_card/frame_25773_pressed_false.jpg",
+        "pressed": false,
+        "frame_idx": 25773
+      },
+      {
+        "path": "assets/testing/select_card/frame_25571_pressed_false.jpg",
+        "pressed": false,
+        "frame_idx": 25571
+      },
+      {
+        "path": "assets/testing/select_card/frame_25674_pressed_false.jpg",
+        "pressed": false,
+        "frame_idx": 25674
+      },
+      {
+        "path": "assets/testing/select_card/frame_25820_pressed_true.jpg",
+        "pressed": true,
+        "frame_idx": 25820
+      },
+      {
+        "path": "assets/testing/select_card/frame_25813_pressed_false.jpg",
+        "pressed": false,
+        "frame_idx": 25813
+      }
+    ]
   },
   "Sell Card": {
     "label": "Sell Card",
@@ -239,7 +569,49 @@
       ]
     ],
     "shadow_dy": 0,
-    "shadow_dw": 0
+    "shadow_dw": 0,
+    "test_frames": [
+      {
+        "path": "assets/testing/sell_card/frame_109337_pressed_false.jpg",
+        "pressed": false,
+        "frame_idx": 109337
+      },
+      {
+        "path": "assets/testing/sell_card/frame_109401_pressed_false.jpg",
+        "pressed": false,
+        "frame_idx": 109401
+      },
+      {
+        "path": "assets/testing/sell_card/frame_109397_pressed_false.jpg",
+        "pressed": false,
+        "frame_idx": 109397
+      },
+      {
+        "path": "assets/testing/sell_card/frame_109396_pressed_false.jpg",
+        "pressed": false,
+        "frame_idx": 109396
+      },
+      {
+        "path": "assets/testing/sell_card/frame_109416_pressed_true.jpg",
+        "pressed": true,
+        "frame_idx": 109416
+      },
+      {
+        "path": "assets/testing/sell_card/frame_108099_pressed_false.jpg",
+        "pressed": false,
+        "frame_idx": 108099
+      },
+      {
+        "path": "assets/testing/sell_card/frame_108123_pressed_false.jpg",
+        "pressed": false,
+        "frame_idx": 108123
+      },
+      {
+        "path": "assets/testing/sell_card/frame_108235_pressed_true.jpg",
+        "pressed": true,
+        "frame_idx": 108235
+      }
+    ]
   },
   "Skip Blind": {
     "label": "Skip Blind",
@@ -262,7 +634,8 @@
     ],
     "shadow_dy": 9,
     "adjusted": true,
-    "shadow_dw": 0
+    "shadow_dw": 0,
+    "test_frames": []
   },
   "Sort by Rank": {
     "label": "Sort by Rank",
@@ -279,7 +652,24 @@
     ],
     "shadow_dy": 3,
     "adjusted": true,
-    "shadow_dw": 0
+    "shadow_dw": 0,
+    "test_frames": [
+      {
+        "path": "assets/testing/sort_by_rank/frame_31027_pressed_true.jpg",
+        "pressed": true,
+        "frame_idx": 31027
+      },
+      {
+        "path": "assets/testing/sort_by_rank/frame_31019_pressed_false.jpg",
+        "pressed": false,
+        "frame_idx": 31019
+      },
+      {
+        "path": "assets/testing/sort_by_rank/frame_30979_pressed_false.jpg",
+        "pressed": false,
+        "frame_idx": 30979
+      }
+    ]
   },
   "Sort by Suit": {
     "label": "Sort by Suit",
@@ -296,7 +686,8 @@
     ],
     "shadow_dy": 3,
     "adjusted": true,
-    "shadow_dw": 0
+    "shadow_dw": 0,
+    "test_frames": []
   },
   "Use Consumable": {
     "label": "Use Consumable",
@@ -322,7 +713,34 @@
       ]
     ],
     "shadow_dy": 0,
-    "shadow_dw": 0
+    "shadow_dw": 0,
+    "test_frames": [
+      {
+        "path": "assets/testing/use_consumable/frame_108584_pressed_false.jpg",
+        "pressed": false,
+        "frame_idx": 108584
+      },
+      {
+        "path": "assets/testing/use_consumable/frame_109336_pressed_true.jpg",
+        "pressed": true,
+        "frame_idx": 109336
+      },
+      {
+        "path": "assets/testing/use_consumable/frame_20120_pressed_false.jpg",
+        "pressed": false,
+        "frame_idx": 20120
+      },
+      {
+        "path": "assets/testing/use_consumable/frame_20110_pressed_false.jpg",
+        "pressed": false,
+        "frame_idx": 20110
+      },
+      {
+        "path": "assets/testing/use_consumable/frame_20154_pressed_true.jpg",
+        "pressed": true,
+        "frame_idx": 20154
+      }
+    ]
   },
   "Use In Pack": {
     "label": "Use In Pack",
@@ -346,7 +764,54 @@
       ]
     ],
     "shadow_dy": 0,
-    "shadow_dw": 0
+    "shadow_dw": 0,
+    "test_frames": [
+      {
+        "path": "assets/testing/use_in_pack/frame_23420_pressed_false.jpg",
+        "pressed": false,
+        "frame_idx": 23420
+      },
+      {
+        "path": "assets/testing/use_in_pack/frame_23459_pressed_false.jpg",
+        "pressed": false,
+        "frame_idx": 23459
+      },
+      {
+        "path": "assets/testing/use_in_pack/frame_23730_pressed_true.jpg",
+        "pressed": true,
+        "frame_idx": 23730
+      },
+      {
+        "path": "assets/testing/use_in_pack/frame_54630_pressed_false.jpg",
+        "pressed": false,
+        "frame_idx": 54630
+      },
+      {
+        "path": "assets/testing/use_in_pack/frame_54609_pressed_false.jpg",
+        "pressed": false,
+        "frame_idx": 54609
+      },
+      {
+        "path": "assets/testing/use_in_pack/frame_54659_pressed_true.jpg",
+        "pressed": true,
+        "frame_idx": 54659
+      },
+      {
+        "path": "assets/testing/use_in_pack/frame_103312_pressed_false.jpg",
+        "pressed": false,
+        "frame_idx": 103312
+      },
+      {
+        "path": "assets/testing/use_in_pack/frame_103476_pressed_false.jpg",
+        "pressed": false,
+        "frame_idx": 103476
+      },
+      {
+        "path": "assets/testing/use_in_pack/frame_103753_pressed_true.jpg",
+        "pressed": true,
+        "frame_idx": 103753
+      }
+    ]
   },
   "Play Game": {
     "label": "Play Game",
@@ -362,6 +827,23 @@
       ]
     ],
     "shadow_dy": 0,
-    "shadow_dw": 0
+    "shadow_dw": 0,
+    "test_frames": [
+      {
+        "path": "assets/testing/play_game/frame_746_pressed_false.jpg",
+        "pressed": false,
+        "frame_idx": 746
+      },
+      {
+        "path": "assets/testing/play_game/frame_813_pressed_false.jpg",
+        "pressed": false,
+        "frame_idx": 813
+      },
+      {
+        "path": "assets/testing/play_game/frame_861_pressed_true.jpg",
+        "pressed": true,
+        "frame_idx": 861
+      }
+    ]
   }
 }

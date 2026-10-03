@@ -1,2 +1,4 @@
-assets/test_inputs/scraped_frames
-assets/test_inputs/videos
+assets/sample_inputs/scraped_frames
+assets/sample_inputs/videos
+
+__pycache__

@@ -18,8 +18,8 @@ FRAME_TIMESTAMP = "00:01:23.500"
 FRAME_FILENAME = "scraped_frame.jpg"
 
 SCRIPT_DIR = Path(__file__).parent
-FRAME_OUTPUT_DIR = SCRIPT_DIR.parent / "assets" / "test_inputs" / "scraped_frames"
-VIDEO_OUTPUT_DIR = SCRIPT_DIR.parent / "assets" / "test_inputs" / "videos"
+FRAME_OUTPUT_DIR = SCRIPT_DIR.parent / "assets" / "sample_inputs" / "scraped_frames"
+VIDEO_OUTPUT_DIR = SCRIPT_DIR.parent / "assets" / "sample_inputs" / "videos"
 
 
 def get_1080p_stream(video_url: str) -> str:

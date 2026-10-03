@@ -10,9 +10,9 @@ def main():
     with open("assets/templates.json", "r") as f:
         data = json.load(f)
 
-    img = cv2.imread("assets/test_inputs/generic_blind_1080p.png")
+    img = cv2.imread("assets/sample_inputs/generic_blind_1080p.png")
     if img is None:
-        print("Could not load image assets/test_inputs/generic_blind_1080p.png")
+        print("Could not load image assets/sample_inputs/generic_blind_1080p.png")
         return
 
     cv2.namedWindow("Adjust ROIs", cv2.WINDOW_NORMAL)

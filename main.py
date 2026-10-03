@@ -1,8 +1,6 @@
 import logging
 import time
 
-import cv2
-
 from config import Config, configure_logging
 from eval_template import eval
 from frame import iter_video_frames

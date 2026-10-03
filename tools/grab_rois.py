@@ -11,7 +11,7 @@ import os
 import cv2
 
 DEFAULT_CONFIG_PATH = "assets/templates.json"
-DEFAULT_IMAGE_PATH = "assets/test_inputs/start_game.jpg"
+DEFAULT_IMAGE_PATH = "assets/sample_inputs/start_game.jpg"
 EXPECTED_RES = (1920, 1080)  # (width, height)
 DISPLAY_WIDTH = 1280
 DISPLAY_HEIGHT = 720
