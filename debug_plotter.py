@@ -102,9 +102,28 @@ def plot(
     axs[0, 2].set_title("matchTemplate Score Map")
     fig.colorbar(im, ax=axs[0, 2], fraction=0.046, pad=0.04)
 
-    # [0, 3] Diagnostic Overlay (Removed for size adjustments)
-    axs[0, 3].axis("off")
-    axs[0, 3].set_title("No Scale Diagnostic Needed")
+    # [0, 3] Diagnostic Overlay
+    if found_target and top_left is not None and bottom_right is not None:
+        detected_crop = img[top_left[1]:bottom_right[1], top_left[0]:bottom_right[0]]
+        
+        if template.ndim == 3:
+            if template.shape[2] == 4:
+                gray_temp = cv2.cvtColor(template, cv2.COLOR_BGRA2GRAY)
+            else:
+                gray_temp = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)
+        else:
+            gray_temp = template.copy()
+            
+        edges_temp = cv2.Canny(gray_temp, 50, 150)
+        
+        edge_overlay = _to_rgb(detected_crop).copy()
+        edge_overlay[edges_temp > 0] = [255, 0, 255]
+        
+        axs[0, 3].imshow(edge_overlay)
+        axs[0, 3].set_title("Template Edges Overlay")
+    else:
+        axs[0, 3].axis("off")
+        axs[0, 3].set_title("No Scale Diagnostic Needed")
 
     def save_and_continue(event):
         if template_json_path and template_name:
@@ -163,11 +182,11 @@ def plot(
             pass
 
         # Adjust layout for the sliders on the right
-        plt.subplots_adjust(right=0.86)
-        ax_dh_slider = plt.axes([0.88, 0.2, 0.02, 0.6])
-        ax_dw_slider = plt.axes([0.92, 0.2, 0.02, 0.6])
-        ax_dy_slider = plt.axes([0.96, 0.2, 0.02, 0.6])
-        ax_button = plt.axes([0.90, 0.85, 0.08, 0.04])
+        plt.subplots_adjust(left=0.05, right=0.82)
+        ax_dh_slider = plt.axes([0.86, 0.35, 0.02, 0.3])
+        ax_dw_slider = plt.axes([0.90, 0.35, 0.02, 0.3])
+        ax_dy_slider = plt.axes([0.94, 0.35, 0.02, 0.3])
+        ax_button = plt.axes([0.88, 0.70, 0.06, 0.04])
         
         dh_slider = Slider(
             ax=ax_dh_slider, 
@@ -286,7 +305,7 @@ def plot(
     import warnings
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", UserWarning)
-        plt.tight_layout()
+        plt.tight_layout(rect=[0, 0, 0.85, 1])
 
     # Maximize window to prevent drifting and ensure it's large enough
     try:
